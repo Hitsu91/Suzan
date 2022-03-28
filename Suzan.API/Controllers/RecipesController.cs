@@ -12,8 +12,8 @@ namespace Suzan.API.Controllers;
 [Authorize]
 public class RecipesController : ControllerBase
 {
-    private readonly IRecipeService _service;
     private readonly ILogger<RecipesController> _logger;
+    private readonly IRecipeService _service;
 
     public RecipesController(IRecipeService service, ILogger<RecipesController> logger)
     {
@@ -21,7 +21,8 @@ public class RecipesController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet, AllowAnonymous]
+    [HttpGet]
+    [AllowAnonymous]
     public async Task<ActionResult<PagedResponse<RecipeGetDto>>> GetAll([FromQuery] PaginationFilter filter)
     {
         var result = await _service.GetAll(filter);
@@ -35,14 +36,12 @@ public class RecipesController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("{id:guid}"), AllowAnonymous]
+    [HttpGet("{id:guid}")]
+    [AllowAnonymous]
     public async Task<ActionResult<RecipeGetDto>> GetById(Guid id)
     {
         var result = await _service.GetById(id);
-        if (result is null)
-        {
-            return NotFound($"Cannot find recipe with id {id}");
-        }
+        if (result is null) return NotFound($"Cannot find recipe with id {id}");
         return Ok(result);
     }
 
@@ -59,5 +58,4 @@ public class RecipesController : ControllerBase
             return StatusCode(ex.StatusCode, ex.Errors);
         }
     }
-
 }

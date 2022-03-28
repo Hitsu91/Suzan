@@ -1,15 +1,15 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Suzan.Application.Data;
 using Suzan.Application.Helpers;
 using Suzan.Domain.DTOs.User;
-using Suzan.Domain.Model;
 using Suzan.Domain.Exceptions;
+using Suzan.Domain.Model;
 
 namespace Suzan.Application.Services.AuthService;
 
@@ -29,13 +29,12 @@ public class AuthService : IAuthService
         var (username, password) = user;
 
         if (UserExists(username))
-        {
             throw new ModelValidationException(
                 "Registration errors",
                 StatusCodes.Status409Conflict,
                 "username",
-                $"Already exists user with username {username}");
-        }
+                $"Already exists user with username {username}"
+            );
 
         var (hash, salt) = PasswordHashHelper.HashPassword(password);
 
@@ -58,22 +57,20 @@ public class AuthService : IAuthService
         var user = await _ctx.Users.FirstOrDefaultAsync(user => user.Username == username);
 
         if (user is null)
-        {
             throw new ModelValidationException(
                 "Login Error",
                 StatusCodes.Status404NotFound,
                 "username",
-                $"Can't find user with username {username}");
-        }
+                $"Can't find user with username {username}"
+            );
 
         if (!PasswordHashHelper.VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
-        {
             throw new ModelValidationException(
                 "Login Error",
                 StatusCodes.Status404NotFound,
                 "credentials",
-                "Can't find user with specified credentials");
-        }
+                "Can't find user with specified credentials"
+            );
 
         var token = CreateToken(user);
         return new UserLoginResponse(token);
@@ -82,11 +79,11 @@ public class AuthService : IAuthService
     private string CreateToken(User user)
     {
         var claims = new List<Claim>
-    {
-        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-        new Claim(ClaimTypes.Name, user.Username),
-        new Claim(ClaimTypes.Role, user.Role.ToString()),
-    };
+        {
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new(ClaimTypes.Name, user.Username),
+            new(ClaimTypes.Role, user.Role.ToString())
+        };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secret));
         var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);

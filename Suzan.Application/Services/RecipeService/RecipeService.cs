@@ -1,20 +1,20 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Suzan.Application.Data;
 using Suzan.Application.Helpers;
 using Suzan.Application.Services.IdentityService;
-using Suzan.Domain.Model;
 using Suzan.Domain.DTOs.Recipe;
 using Suzan.Domain.Exceptions;
+using Suzan.Domain.Model;
 
 namespace Suzan.Application.Services.RecipeService;
 
 public class RecipeService : IRecipeService
 {
     private readonly DataContext _ctx;
-    private readonly IMapper _mapper;
     private readonly IIdentityService _identityService;
+    private readonly IMapper _mapper;
     private readonly IQueryable<Recipe> _recipes;
 
     public RecipeService(DataContext ctx, IMapper mapper, IIdentityService identityService)
@@ -30,8 +30,8 @@ public class RecipeService : IRecipeService
     public async Task<PagedResponse<RecipeGetDto>> GetAll(PaginationFilter filter)
     {
         var recipes = await _recipes.Paginate(filter)
-                .Select(r => _mapper.Map<RecipeGetDto>(r))
-                .ToListAsync();
+            .Select(r => _mapper.Map<RecipeGetDto>(r))
+            .ToListAsync();
         var count = await _recipes.CountAsync();
 
         return PaginationHelper.CreatePagedResponse(recipes, filter, count);
@@ -40,12 +40,12 @@ public class RecipeService : IRecipeService
     public async Task<PagedResponse<RecipeGetDto>> GetAllMine(PaginationFilter filter)
     {
         var myRecipes = _recipes
-                            .Where(r => r.Author != null && r.Author.Id == _identityService.GetUserId());
+            .Where(r => r.Author != null && r.Author.Id == _identityService.GetUserId());
 
         var recipes = await myRecipes
-                            .Paginate(filter)
-                            .Select(r => _mapper.Map<RecipeGetDto>(r))
-                            .ToListAsync();
+            .Paginate(filter)
+            .Select(r => _mapper.Map<RecipeGetDto>(r))
+            .ToListAsync();
 
         var count = await myRecipes.CountAsync();
 
@@ -56,8 +56,8 @@ public class RecipeService : IRecipeService
     {
         var recipes = _recipes.Where(r => r.Category != null && r.Category.Id == categoryId);
         var data = await recipes.Paginate(filter)
-                        .Select(r => _mapper.Map<RecipeGetDto>(r))
-                        .ToListAsync();
+            .Select(r => _mapper.Map<RecipeGetDto>(r))
+            .ToListAsync();
 
         var count = await recipes.CountAsync();
 
@@ -76,13 +76,11 @@ public class RecipeService : IRecipeService
         var category = await _ctx.Categories.FindAsync(newRecipe.CategoryId);
 
         if (category is null)
-        {
             throw new ModelValidationException(
                 "Add Recipe Error",
                 StatusCodes.Status404NotFound,
                 nameof(category),
                 $"Cannot find a category with id {newRecipe.CategoryId}");
-        }
 
         var recipe = _mapper.Map<Recipe>(newRecipe);
         recipe.Author = author;
@@ -95,13 +93,11 @@ public class RecipeService : IRecipeService
     public async Task<RecipeGetDto?> Update(Guid id, RecipeUpdateDto updatedRecipe)
     {
         if (!await ExistsAsync(id))
-        {
             throw new ModelValidationException(
                 "Update Recipe Error",
                 StatusCodes.Status404NotFound,
                 nameof(id),
                 $"Cannot find a recipe with id {id}");
-        }
 
         var recipe = _mapper.Map<Recipe>(updatedRecipe);
         recipe.Id = id;
@@ -115,13 +111,11 @@ public class RecipeService : IRecipeService
         var recipe = await _ctx.Recipes.FindAsync(id);
 
         if (recipe is null)
-        {
             throw new ModelValidationException(
                 "Update Recipe Error",
                 StatusCodes.Status404NotFound,
                 nameof(id),
                 $"Cannot find a recipe with id {id}");
-        }
 
         _ctx.Recipes.Remove(recipe);
         await _ctx.SaveChangesAsync();
@@ -133,6 +127,4 @@ public class RecipeService : IRecipeService
     {
         return !await _ctx.Recipes.AnyAsync(r => r.Id == id);
     }
-
-
 }

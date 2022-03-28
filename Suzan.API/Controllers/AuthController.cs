@@ -5,7 +5,6 @@ using Suzan.Domain.Exceptions;
 
 namespace Suzan.API.Controllers;
 
-
 [ApiController]
 [Route("api/v1/[controller]")]
 public class AuthController : ControllerBase
@@ -52,6 +51,4 @@ public class AuthController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
-
-
 }

@@ -2,10 +2,6 @@
 
 public class ModelValidationException : Exception
 {
-    public ModelValidationExceptionErrors Errors { get; set; }
-
-    public int StatusCode => Errors.Status;
-
     public ModelValidationException(string title, int status)
     {
         Errors = new ModelValidationExceptionErrors(title, status);
@@ -16,6 +12,10 @@ public class ModelValidationException : Exception
         Errors.AddError(propertyName, error);
     }
 
+    public ModelValidationExceptionErrors Errors { get; set; }
+
+    public int StatusCode => Errors.Status;
+
     public ModelValidationException Append(string propertyName, string error)
     {
         Errors.AddError(propertyName, error);
@@ -24,32 +24,26 @@ public class ModelValidationException : Exception
 
     public ModelValidationException Append(string propertyName, params string[] errors)
     {
-        foreach (var error in errors)
-        {
-            Errors.AddError(propertyName, error);
-        }
+        foreach (var error in errors) Errors.AddError(propertyName, error);
         return this;
     }
 }
 
 public class ModelValidationExceptionErrors
 {
-    public string Title { get; set; }
-    public int Status { get; set; }
-    public Dictionary<string, List<string>> Errors { get; } = new();
-
     public ModelValidationExceptionErrors(string title, int status = 200)
     {
         Title = title;
         Status = status;
     }
 
+    public string Title { get; set; }
+    public int Status { get; set; }
+    public Dictionary<string, List<string>> Errors { get; } = new();
+
     public void AddError(string propertyName, string error)
     {
-        if (!Errors.ContainsKey(propertyName))
-        {
-            Errors[propertyName] = new List<string>();
-        }
+        if (!Errors.ContainsKey(propertyName)) Errors[propertyName] = new List<string>();
         Errors[propertyName].Add(error);
     }
 }

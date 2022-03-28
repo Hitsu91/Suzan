@@ -8,4 +8,3 @@ public interface IAuthService
 
     Task<UserLoginResponse> Login(UserLoginRequest user);
 }
-

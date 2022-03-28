@@ -1,6 +1,5 @@
-﻿using Suzan.Application.Helpers;
+﻿using System.Linq.Expressions;
 using Suzan.Domain.Model;
-using System.Linq.Expressions;
 
 namespace Suzan.Application.Helpers;
 
@@ -26,17 +25,13 @@ public static class PaginationHelper
         PaginationFilter paginationFilter)
     {
         if (paginationFilter.SortBy is not null)
-        {
-            switch (paginationFilter.Direction)
+            source = paginationFilter.Direction switch
             {
-                case Direction.Asc:
-                    source = source.OrderBy(paginationFilter.SortBy);
-                    break;
-                case Direction.Desc:
-                    source = source.OrderByDescending(paginationFilter.SortBy);
-                    break;
-            }
-        }
+                Direction.Asc => source.OrderBy(paginationFilter.SortBy),
+                Direction.Desc => source.OrderByDescending(paginationFilter.SortBy),
+                _ => source
+            };
+
         return source
             .Skip((paginationFilter.PageNumber - 1) * paginationFilter.PageSize)
             .Take(paginationFilter.PageSize);
@@ -60,5 +55,4 @@ public static class PaginationHelper
 
         return Expression.Lambda<Func<T, object>>(propAsObject, parameter);
     }
-
 }

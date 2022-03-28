@@ -1,10 +1,10 @@
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Suzan.Application.Data;
 using Suzan.Domain.DTOs.Category;
-using Suzan.Domain.Model;
 using Suzan.Domain.Exceptions;
+using Suzan.Domain.Model;
 
 namespace Suzan.Application.Services.CategoryService;
 
@@ -38,13 +38,12 @@ public class CategoryService : ICategoryService
     public async Task<CategoryGetDto> Update(Guid id, CategoryUpdateDto updatedCategory)
     {
         if (!await _ctx.Categories.AnyAsync(c => c.Id == id))
-        {
             throw new ModelValidationException(
                 "Category id",
                 StatusCodes.Status404NotFound,
                 nameof(id),
-                $"Category with id {id}, does not exists");
-        }
+                $"Category with id {id}, does not exists"
+            );
 
         var category = _mapper.Map<Category>(updatedCategory);
         category.Id = id;

@@ -3,7 +3,6 @@ using Suzan.Domain.DTOs.User;
 
 namespace Suzan.Domain.DTOs.Recipe;
 
-
 public class RecipeGetDto
 {
     public Guid Id { get; set; }

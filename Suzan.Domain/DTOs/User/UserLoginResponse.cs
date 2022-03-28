@@ -2,10 +2,10 @@
 
 public class UserLoginResponse
 {
-    public string Token { get; init; }
-
     public UserLoginResponse(string token)
     {
         Token = token;
     }
+
+    public string Token { get; init; }
 }

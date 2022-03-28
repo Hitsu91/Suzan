@@ -15,7 +15,6 @@ public class MappingProfile : Profile
         CreateMap<CategoryUpdateDto, Category>();
         CreateMap<Category, CategoryGetDto>();
 
-
         // RECIPE //
         CreateMap<RecipeAddDto, Recipe>();
         CreateMap<RecipeUpdateDto, Recipe>();

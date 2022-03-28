@@ -1,5 +1,4 @@
-﻿
-using Suzan.Domain.Model;
+﻿using Suzan.Domain.Model;
 
 namespace Suzan.Application.Services.IdentityService;
 

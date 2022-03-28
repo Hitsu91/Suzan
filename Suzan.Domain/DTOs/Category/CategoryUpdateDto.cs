@@ -4,6 +4,5 @@ namespace Suzan.Domain.DTOs.Category;
 
 public class CategoryUpdateDto
 {
-    [Required]
-    public string Name { get; set; } = string.Empty;
+    [Required] public string Name { get; set; } = string.Empty;
 }

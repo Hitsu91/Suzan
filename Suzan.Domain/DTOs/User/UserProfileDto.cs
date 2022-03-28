@@ -1,6 +1,7 @@
 ﻿using Suzan.Domain.Model;
 
 namespace Suzan.Domain.DTOs.User;
+
 public class UserProfileDto
 {
     public Guid Id { get; set; }

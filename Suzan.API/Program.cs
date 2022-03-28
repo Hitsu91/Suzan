@@ -1,3 +1,4 @@
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Suzan.Application.Data;
@@ -25,8 +26,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         var secret = builder.Configuration["AppSettings:Token"];
-        var key = System.Text.Encoding.UTF8.GetBytes(secret);
-        options.TokenValidationParameters = new TokenValidationParameters()
+        var key = Encoding.UTF8.GetBytes(secret);
+        options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(key),
@@ -50,10 +51,8 @@ services.AddScoped<IUserService, UserService>();
 const string allowedOriginPolicy = "forDevelopment";
 services.AddCors(options =>
 {
-    options.AddPolicy(allowedOriginPolicy, corsPolicyBuilder =>
-    {
-        corsPolicyBuilder.WithOrigins("http://localhost:4200");
-    });
+    options.AddPolicy(allowedOriginPolicy,
+        corsPolicyBuilder => { corsPolicyBuilder.WithOrigins("http://localhost:4200"); });
 });
 // END CORS //
 

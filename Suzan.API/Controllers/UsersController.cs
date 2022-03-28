@@ -26,7 +26,8 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut("update-role/{id:guid}")]
-    public async Task<ActionResult<UserProfileDto>> UpdateUser([FromRoute] Guid id, [FromBody] UserUpdateRoleDto userUpdateRole)
+    public async Task<ActionResult<UserProfileDto>> UpdateUser([FromRoute] Guid id,
+        [FromBody] UserUpdateRoleDto userUpdateRole)
     {
         return Ok(await _userService.UpdateRole(id, userUpdateRole.NewRole));
     }

@@ -10,8 +10,8 @@ namespace Suzan.Application.Services.IdentityService;
 public class IdentityService : IIdentityService
 {
     private readonly DataContext _ctx;
-    private readonly IMapper _mapper;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IMapper _mapper;
 
     public IdentityService(DataContext ctx, IMapper mapper, IHttpContextAccessor httpContextAccessor)
     {
@@ -28,9 +28,7 @@ public class IdentityService : IIdentityService
             .FindFirstValue(ClaimTypes.NameIdentifier);
 
         if (nameIdentifierClaim is null)
-        {
             throw new ModelValidationException("Authentication State", StatusCodes.Status401Unauthorized);
-        }
 
         return Guid.Parse(nameIdentifierClaim);
     }
@@ -40,9 +38,7 @@ public class IdentityService : IIdentityService
     {
         var loggedUser = await _ctx.Users.FindAsync(GetUserId());
         if (loggedUser is null)
-        {
             throw new ModelValidationException("Authentication State", StatusCodes.Status401Unauthorized);
-        }
         return loggedUser;
     }
 

@@ -19,7 +19,8 @@ public class CategoriesController : ControllerBase
         _categoryService = categoryService;
     }
 
-    [HttpGet, AllowAnonymous]
+    [HttpGet]
+    [AllowAnonymous]
     public async Task<ActionResult<List<CategoryGetDto>>> GetAll()
     {
         var result = await _categoryService.GetAll();
@@ -47,4 +48,3 @@ public class CategoriesController : ControllerBase
         }
     }
 }
-
