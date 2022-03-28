@@ -7,12 +7,12 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["RestAPI/Suzan.API.csproj", "RestAPI/"]
+COPY ["Suzan.API/Suzan.API.csproj", "Suzan.API/"]
 COPY ["Suzan.Application/Suzan.Application.csproj", "Suzan.Application/"]
-COPY ["BusinnessLogic/Suzan.Domain.csproj", "BusinnessLogic/"]
-RUN dotnet restore "RestAPI/Suzan.API.csproj"
+COPY ["Suzan.Domain/Suzan.Domain.csproj", "Suzan.Domain/"]
+RUN dotnet restore "Suzan.API/Suzan.API.csproj"
 COPY . .
-WORKDIR "/src/RestAPI"
+WORKDIR "/src/Suzan.API"
 RUN dotnet build "Suzan.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
