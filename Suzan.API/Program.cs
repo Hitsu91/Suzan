@@ -1,8 +1,10 @@
 using System.Text;
+using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Suzan.Application.Data;
 using Suzan.Application.Services.AuthService;
+using Suzan.Application.Services.BlobService;
 using Suzan.Application.Services.CategoryService;
 using Suzan.Application.Services.IdentityService;
 using Suzan.Application.Services.RecipeService;
@@ -22,6 +24,10 @@ builder.Services.AddSwaggerGen();
 const string dbPath = "Data Source=recipes.db";
 builder.Services.AddSqlite<DataContext>(dbPath);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+var azureBlobConnectionString = builder.Configuration.GetValue<string>("AzureStorageConnection");
+builder.Services.AddSingleton(x => new BlobServiceClient(azureBlobConnectionString));
+builder.Services.AddSingleton<IBlobService, BlobService>();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
